@@ -1,1 +1,1 @@
-﻿<%@ ServiceHost Language="C#" Debug="true" Service="SoapService.Service1" CodeBehind="Calculator.svc.cs" %>
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="SoapService.Calculator" CodeBehind="Calculator.svc.cs" %>
