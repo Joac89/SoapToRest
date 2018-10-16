@@ -28,7 +28,7 @@ crear una solución en blanco y luego dentro de esa solución, agregar los nuevo
 
 **Proyecto WCF**  
 Para crear el proyecto, vamos a Visual Studio, y seleccionamos en el menú izquierdo la opción WCF, 
-seguido de **Aplicación de servicios WCF*  
+seguido de **Aplicación de servicios WCF**  
 ![WCF](https://github.com/Joac89/SoapToRest/blob/master/Blog/CrearWcf.JPG)
 
 Nuestro proyecto en la solución, debe verse asi:  
