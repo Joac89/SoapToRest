@@ -7,12 +7,12 @@ Hoy vamos a implementar una solución para poder consumir un servicio SOAP(xml) 
 3. [Implementación](#implementación)
 4. [Modelos](#modelos)
 5. [Transformación](#transformación)
-6. [Conclusión](#conclusion)
+6. [Conclusión](#conclusión)
 7. [Nota](#nota)
 
 ## Problema
 En ocasiones, surge la necesidad de comunicar un sistema de servicios SOAP(xml) con nuevos desarrollos de API's en REST, complicando 
-un poco la comunicación entre ellos y llevandonos a pensar que podríamos utilizar para resolver ese inconveniente.
+un poco la comunicación entre ellos y llevandonos a pensar que podríamos utilizar para resolver ese inconveniente.  
 
 En el siguiente taller, utilizaremos .Net Core para construir un intermediario que nos permita consumir el servicio SOAP y dar 
 su respuesta en REST, con el fin de que futuras API's REST creadas puedan utilizar la funcionalidad del servicio sin pasar de nuevo por 
@@ -26,31 +26,29 @@ simplemente una calculadora con dos métodos.
 Crearemos un proyecto WCF y un API Rest con Visual Studio para el ejercicio propuesto. Antes de crear los proyectos, se recomienda
 crear una solución en blanco y luego dentro de esa solución, agregar los nuevos proyectos.
 
-**Proyecto WCF**:
+**Proyecto WCF**  
 Para crear el proyecto, vamos a Visual Studio, y seleccionamos en el menú izquierdo la opción WCF, 
-seguido de **Aplicación de servicios WCF*
+seguido de **Aplicación de servicios WCF*  
 ![WCF](https://github.com/Joac89/SoapToRest/blob/master/Blog/CrearWcf.JPG)
 
-Nuestro proyecto en la solución, debe verse asi:
-
+Nuestro proyecto en la solución, debe verse asi:  
 ![WCF_View](https://github.com/Joac89/SoapToRest/blob/master/Blog/proyectoWcf.JPG)
 
-**Proyecto API**:
+**Proyecto API**  
 Para crear el proyecto, vamos a Visual Studio y seleccionamos en el menú izquierdo la opción .Net Core, seguido de 
-**Aplicación web ASP.NET Core**
+**Aplicación web ASP.NET Core**  
 ![REST](https://github.com/Joac89/SoapToRest/blob/master/Blog/crearREST.JPG)
 
-Nuestro proyecto en la solución, debe verse asi:
-
+Nuestro proyecto en la solución, debe verse asi  
 ![REST_View](https://github.com/Joac89/SoapToRest/blob/master/Blog/proyectoREST.JPG)
 
 Luego de tener nuestros proyectos creados, vamos a construir la calculadora para ser expuesta como servicio SOAP(xml). Para ello, 
 crearemos la interfaz de servicio con los métodos **Speedup** y **Efficiency**. Ademas, necesitaremos los contratos de datos para las 
-operaciones descritas
+operaciones descritas.  
 
-**Interfaz:**
+**Interfaz:**  
 ```
-  [ServiceContract]
+  	[ServiceContract]
 	public interface ICalculator
 	{
 		[OperationContract]
@@ -61,9 +59,9 @@ operaciones descritas
 	}
 ```
 
-**Contratos:**
+**Contratos:**  
 ```
-  [DataContract]
+  	[DataContract]
 	public class Speedup
 	{
 		[DataMember]
@@ -93,10 +91,10 @@ operaciones descritas
 
 La clase Result, la utilizaremos para devolver el resultado de los métodos de la interfaz.
 Teniendo ya nuestra interfaz, vamos a realizar su implementación. Para ello, crearemos una clase llamada Calculator que tendrá la 
-implementación de la Interfaz:
+implementación de la Interfaz:  
 
 ```
-  public class Calculator : ICalculator
+  	public class Calculator : ICalculator
 	{
 		public Result Efficiency(Amdhal data)
 		{
@@ -124,115 +122,111 @@ implementación de la Interfaz:
 Con ésto, tenemos ya nuestro servicio WCF y continuaremos con la construcción de una API Rest que servirá de transformador entre 
 las respuestas XML del servicio y los resultados REST.
 
-**Probemos el WCF!!**
+**Probemos el WCF!!**  
 ![SpeedSoap](https://github.com/Joac89/SoapToRest/blob/master/Blog/pruebaSpeed.JPG)
 ![EficiencySoap](https://github.com/Joac89/SoapToRest/blob/master/Blog/pruebaEficiencia.JPG)
 
 
 Ahora, vamos por nuestra API Rest intermediario y para ello, crearemos un nuevo controlador llamado **CalculatorController** que 
-tendrá los mismos métodos que usa el servicio SOAP.
+tendrá los mismos métodos que usa el servicio SOAP.  
 Para apoyar el desarrollo del controlador, crearemos dos capas (carpetas) en el proyecto que contendrán las clases 
-necesarias y los modelos de la implementación.
+necesarias y los modelos de la implementación.  
 
 Los modelos, nos permitirán tomar los datos de la respuesta XML del servicio SOAP y deserializarla en un Objeto local, para luego 
 enviarla como respuesta en formato REST desde nuestra API.
 
 ## Modelos
-
 ¿Cómo construimos los modelos? Primero, debemos conocer el **Request** y **Response** del servicio SOAP para entender que recibe y que devuelve y 
 así poder transformarlo. Utilizando herramientas como SOAP-UI o el complemento Boomerang de Google, podemos consumir el servicio.
 
-**Requests y Responses**
-Para el método **Speedup**:
-Request
-
+**Requests y Responses**  
+Para el método **Speedup**:  
+*Request*  
 ![SpeedReq](https://github.com/Joac89/SoapToRest/blob/master/Blog/requestSpeedup.JPG)
 
-Response
+*Response*  
 ![SpeedRes](https://github.com/Joac89/SoapToRest/blob/master/Blog/responseSpeedup.JPG)
 
-Para el método **Efficiency**:
-Request
-
+Para el método **Efficiency**:  
+*Request*  
 ![SpeedReq](https://github.com/Joac89/SoapToRest/blob/master/Blog/requestEfficiency.JPG)
 
-Response
+*Response*  
 ![SpeedRes](https://github.com/Joac89/SoapToRest/blob/master/Blog/responseEfficiency.JPG)
 
 Ahora que conocemos lo que recibe y responde el servicio SOAP para los métodos a implementar, procedemos a crear los modelos 
 en nuestra API Res.
 
 **Modelos en C#**
-
 Speedup
   ```
-  namespace ApiRest.Model
-  {
-	public class Speedup
-	{
-		public decimal Calculated { get; set; }
-	}
+	namespace ApiRest.Model
+  	{
+		public class Speedup
+		{
+			public decimal Calculated { get; set; }
+		}
 	
-    public class SpeedupRoot
-    {
-		public SpeedupEnvelope Envelope { get; set; }
-    }
+    		public class SpeedupRoot
+    		{
+			public SpeedupEnvelope Envelope { get; set; }
+    		}
 
-	public class SpeedupResult
-	{
-		public decimal Calculated { get; set; }
-	}
+		public class SpeedupResult
+		{
+			public decimal Calculated { get; set; }
+		}
 
-	public class SpeedupResponse
-	{
-		public SpeedupResult SpeedupResult { get; set; }
-	}
+		public class SpeedupResponse
+		{
+			public SpeedupResult SpeedupResult { get; set; }
+		}
 
-	public class SpeedupBody
-	{
-		public SpeedupResponse SpeedupResponse { get; set; }
-	}
+		public class SpeedupBody
+		{
+			public SpeedupResponse SpeedupResponse { get; set; }
+		}
 
-	public class SpeedupEnvelope
-	{
-		public SpeedupBody Body { get; set; }
+		public class SpeedupEnvelope
+		{
+			public SpeedupBody Body { get; set; }
+		}
 	}
-}
   ```
 Efficiency
   ```
-    namespace ApiRest.Model
-    {
-	public class Efficiency
-	{
-		public decimal Calculated { get; set; }
-	}
+    	namespace ApiRest.Model
+    	{
+		public class Efficiency
+		{
+			public decimal Calculated { get; set; }
+		}
 	
-    public class EfficiencyRoot
-    {
-		public EfficiencyEnvelope Envelope { get; set; }
-    }
+    		public class EfficiencyRoot
+		{
+			public EfficiencyEnvelope Envelope { get; set; }
+		}
 
-	public class EfficiencyResult
-	{
-		public decimal Calculated { get; set; }
-	}
+		public class EfficiencyResult
+		{
+			public decimal Calculated { get; set; }
+		}
 
-	public class EfficiencyResponse
-	{
-		public EfficiencyResult EfficiencyResult { get; set; }
-	}
+		public class EfficiencyResponse
+		{
+			public EfficiencyResult EfficiencyResult { get; set; }
+		}
 
-	public class EfficiencyBody
-	{
-		public EfficiencyResponse EfficiencyResponse { get; set; }
-	}
+		public class EfficiencyBody
+		{
+			public EfficiencyResponse EfficiencyResponse { get; set; }
+		}
 
-	public class EfficiencyEnvelope
-	{
-		public EfficiencyBody Body { get; set; }
+		public class EfficiencyEnvelope
+		{
+			public EfficiencyBody Body { get; set; }
+		}
 	}
-}
   ```
 
 Los modelos pueden generarse automáticamente a partir del XML con herramientas online como la siguiente: https://xmltocsharp.azurewebsites.net/ aquí, pegamos nuestro XML sin los Namespaces (un xml limpio) y nos devolverá como resultado las
@@ -242,8 +236,8 @@ clases en c#.
 Teniendo ya nuestros modelos, continuamos implementando nuestro transformados. Para ello, construiremos una clase llamada **Transform** que nos permitirá: Quitar namespaces del XML, limpiar el XML y convertirlo a JSON para ser deserializado.
 
   ```
-    public static class Transform
-    {
+ 	public static class Transform
+    	{
 		public static string Exec(string soapResponse)
 		{
 			var xm = XElement.Parse(soapResponse);
@@ -339,65 +333,65 @@ La clase se crea de manera estática y se implementan dos métodos de extensión
 Seguramente puede implementarse de una mejor manera, pero para efectos del taller es suficiente lo propuesto.
 Teniendo ya nuestra clase de transformación, solo nos queda implementar el controlador para transformar los datos:
  ```
-	[HttpGet("speedup/{core}/{serialtime}/{time}")]
-		public async Task<IActionResult> Speedup(string core, string serialTime, string time)
+ 	[HttpGet("speedup/{core}/{serialtime}/{time}")]
+	public async Task<IActionResult> Speedup(string core, string serialTime, string time)
+	{
+		var result = new Speedup();
+
+		using (var client = new HttpClient())
 		{
-			var result = new Speedup();
+			var request = CalculatorService.GetRequestSpeedup(core, serialTime, time);
+			var content = new StringContent(request, Encoding.UTF8, "text/xml");
+			var action = "http://tempuri.org/ICalculator/Speedup";
 
-			using (var client = new HttpClient())
+			client.DefaultRequestHeaders.Add("SOAPAction", action);
+
+			using (var response = await client.PostAsync(CalculatorService.Url, content))
 			{
-				var request = CalculatorService.GetRequestSpeedup(core, serialTime, time);
-				var content = new StringContent(request, Encoding.UTF8, "text/xml");
-				var action = "http://tempuri.org/ICalculator/Speedup";
+				var asyncstring = await response.Content.ReadAsStringAsync();
+				var soapResponse = Transform.Exec(asyncstring);
+				var serialize = JsonConvert.DeserializeObject<SpeedupRoot>(soapResponse);
 
-				client.DefaultRequestHeaders.Add("SOAPAction", action);
-
-				using (var response = await client.PostAsync(CalculatorService.Url, content))
-				{
-					var asyncstring = await response.Content.ReadAsStringAsync();
-					var soapResponse = Transform.Exec(asyncstring);
-					var serialize = JsonConvert.DeserializeObject<SpeedupRoot>(soapResponse);
-
-					result.Calculated = serialize.Envelope.Body.SpeedupResponse.SpeedupResult.Calculated;
-				}
+				result.Calculated = serialize.Envelope.Body.SpeedupResponse.SpeedupResult.Calculated;
 			}
-
-			return Ok(result);
 		}
 
-		[HttpGet("efficiency/{core}/{speedup}")]
-		public async Task<IActionResult> Efficiency(string core, string speedUp)
+		return Ok(result);
+	}
+
+	[HttpGet("efficiency/{core}/{speedup}")]
+	public async Task<IActionResult> Efficiency(string core, string speedUp)
+	{
+		var result = new Efficiency();
+
+		using (var client = new HttpClient())
 		{
-			var result = new Efficiency();
+			var request = CalculatorService.GetRequestEfficiency(core, speedUp);
+			var content = new StringContent(request, Encoding.UTF8, "text/xml");
+			var action = "http://tempuri.org/ICalculator/Efficiency";
 
-			using (var client = new HttpClient())
+			client.DefaultRequestHeaders.Add("SOAPAction", action);
+
+			using (var response = await client.PostAsync(CalculatorService.Url, content))
 			{
-				var request = CalculatorService.GetRequestEfficiency(core, speedUp);
-				var content = new StringContent(request, Encoding.UTF8, "text/xml");
-				var action = "http://tempuri.org/ICalculator/Efficiency";
+				var asyncstring = await response.Content.ReadAsStringAsync();
+				var soapResponse = Transform.Exec(asyncstring);
+				var serialize = JsonConvert.DeserializeObject<EfficiencyRoot>(soapResponse);
 
-				client.DefaultRequestHeaders.Add("SOAPAction", action);
-
-				using (var response = await client.PostAsync(CalculatorService.Url, content))
-				{
-					var asyncstring = await response.Content.ReadAsStringAsync();
-					var soapResponse = Transform.Exec(asyncstring);
-					var serialize = JsonConvert.DeserializeObject<EfficiencyRoot>(soapResponse);
-
-					result.Calculated = serialize.Envelope.Body.EfficiencyResponse.EfficiencyResult.Calculated;
-				}
+				result.Calculated = serialize.Envelope.Body.EfficiencyResponse.EfficiencyResult.Calculated;
 			}
-
-			return Ok(result);
 		}
+
+		return Ok(result);
+	}
  ```
  
 ¿qué hacen los métodos?: Utilizan la clase HttpClient para hacer el llamado al servicio SOAP. Pero antes de ello, toman los datos enviados al API Rest, construyen el Request que será enviado, envían la respuesta, toman el resultado de la respuesta (con el xml ya transformado a JSON) y deserializan con los modelos construidos anteriormente para así entregar una respuesta JSON en el API Rest.
 
-**Speedup**
+**Speedup**  
 ![SpeedEnd](https://github.com/Joac89/SoapToRest/blob/master/Blog/speedupRest.JPG)
 
-**Efficiency**
+**Efficiency**  
 ![EfficiencyEnd](https://github.com/Joac89/SoapToRest/blob/master/Blog/efficiencyRest.JPG)
 
 ¿Notaron que tanto las pruebas de SOAP y REST devolvieron los mismos resultados?. Con ésto, ya tenemos nuestro transformador sencillo de SOAP a REST con .Net Core. Recuerden que .Net Core es multiplataforma y modular.
