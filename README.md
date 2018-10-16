@@ -1,5 +1,5 @@
-# Consumir un servicio SOAP (XML) desde un API Rest con .Net Core.
-Hoy vamos a implementar una solución para poder consumir un servicio SOAP(xml) desde .Net Core y devolver su respuesta en REST.
+# Consumir un servicio SOAP (XML) desde un API Rest con .Net Core y responder con JSON
+Hoy vamos a implementar una solución para poder consumir un servicio SOAP(xml) desde .Net Core (versión 2.0) y devolver su respuesta en REST.
 
 ## Tabla de contenido
 1. [Problema](#problema)
